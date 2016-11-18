@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roads</title>
+    <link type="text/css" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+    <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">Menu</div>
+            <div class="col-sm-1" id="base-stats">
+                <button type="button" class="btn btn-default" id="btn-stats">Stats</button>
+            </div>
+            <div class="col-sm-1" id="base-in">
+                <button type="button" class="btn btn-success" id="btn-in">Sign In</button>
+            </div>
+            <div class="col-sm-1" id="base-up">
+                <button type="button" class="btn btn-primary" id="btn-up">Sign Up</button>
+            </div>
+
+            <div class="col-sm-2" id="base-user" hidden>
+                <label id="lbl-user"></label>
+            </div>
+
+            <div class="col-sm-1" id="base-out" hidden>
+                <button type="button" class="btn btn-danger" id="btn-out">Exit</button>
+            </div>
+        </div>
+        <div class="row">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaDbK3Euwvlvh39XWABpxHW_sgWsxjjMc&libraries=places">
+    </script>
+    <script src="{% static 'js/map.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            var map = document.getElementById('map');
+            if(map != null) {
+                initMap(map);
+            }
+        });
+
+        $('#btn-up').click(function () {
+            $('#stats-col').hide();
+            $('#auth-col').hide();
+            $('#reg-col').show();
+        });
+
+        $('#btn-stats').click(function () {
+            $('#reg-col').hide();
+            $('#auth-col').hide();
+            $('#stats-col').show();
+        });
+
+        $('#btn-in').click(function () {
+            $('#stats-col').hide();
+            $('#reg-col').hide();
+            $('#auth-col').show();
+        });
+
+        $('#btn-out').click(function () {
+            SignOut();
+        });
+    </script>
+
+    <script>
+        function SignIn() {
+            getRoutesTable();
+            $('#auth-col').hide();
+            $('#stats-col').hide();
+            $('#reg-col').hide();
+            $('#base-in').hide();
+            $('#base-up').hide();
+            $('#base-stats').hide();
+            $('#base-out').show();
+            $('#base-user').show();
+            $('#lbl-user').text(userName);
+            $('#routes-col').show();
+{#            $('#btn-add-route').prop('disabled', false);#}
+            console.log("SIGNIN");
+        }
+
+        function SignOut() {
+            clearRoutesTable();
+            $('#base-in').show();
+            $('#base-up').show();
+            $('#base-stats').show();
+            $('#base-out').hide();
+            $('#base-user').hide();
+            $('#reg-col').hide();
+            $('#reg-row').show();
+            $('#reg-message').hide();
+            $('#auth-col').hide();
+            $('#auth-row').show();
+            $('#auth-message').hide();
+            $('#stats-col').show();
+            $('#routes-col').hide();
+            $('#btn-add-route').prop('disabled', true);
+
+            userName = null;
+            signedIn = false;
+        }
+
+        function getRoutesTable() {
+            $.post('get_routes_table/', {user_id: userName})
+                .done(function (response) {
+
+                    console.log(response);
+
+                    $('#table-route-body').append(formTableRows(response.result));
+                })
+                .fail(function (jqXHR) {
+                    var error = JSON.parse(jqXHR);
+                    console.log("FAIL");
+                    console.log(error.status + " " + error.message);
+                });
+        }
+
+        function clearRoutesTable() {
+            var list = document.getElementById("table-route-body");
+            var len = list.childNodes.length;
+            for(var i = 0; i < len; i++){
+                list.removeChild(list.childNodes[0]);
+            }
+        }
+
+        function reloadRoutesTable() {
+            clearRoutesTable();
+            getRoutesTable();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+{%  extends 'base.html' %}
+{% block content %}
+
+    <div class="col-sm-6 col-sm-offset-0">
+        <div id="map" style='height:440px;width:600px;'></div>
+
+        <label class="control-label" for="origin-input">Звідки:</label>
+        <input id="origin-input" type="text" class="form-control">
+
+        <label class="control-label" for="destination-input">Куди:</label>
+        <input id="destination-input" type="text" class="form-control">
+        <br>
+
+        <button type="button" class="btn btn-success" id="btn-calc-route">Розрахувати маршрут</button>
+        <button type="button" class="btn btn-warning" id="btn-add-route" disabled>Додати маршрут</button>
+    </div>
+
+    <div class="col-sm-5 col-sm-offset-1" id="stats-col">
+        <legend>Statistics</legend>
+    </div>
+
+    <div class="col-sm-5 col-sm-offset-1" id="reg-col" hidden>
+        <form class="form-horizontal" role="form" name="reg-form" id="reg-form">
+            <div class="form-group">
+                <div class="row">
+                    <legend>Registration</legend>
+                </div>
+
+                <div class="row" id="reg-row">
+
+                    <label class="control-label" for="reg-name">Name:</label><br>
+                    <input type="text" class="form-control" id="reg-name" name="reg-name" value="name" placeholder="Enter your name ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-email">Email:</label><br>
+                    <input type="email" class="form-control" id="reg-email" name="reg-email" value="email@test" placeholder="Enter your email ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-password1">Password:</label><br>
+                    <input type="password" class="form-control" id="reg-password1" name="password" value="pass" placeholder="Enter your password ..." required>
+                    <br>
+
+                    <input type="password" class="form-control" id="reg-password2" name="confirmPassword" value="pass" placeholder="Reenter your password ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-city">Main city:</label><br>
+                    <input type="text" class="form-control" id="reg-city" name="reg-city" required>
+                    <input type="hidden" name="reg-city-attrib" id="reg-city-attrib">
+                    <br><br>
+
+                    <button type="submit" id="reg-btn" class="btn btn-primary">Register</button>
+                    <br>
+                </div>
+                <label id="reg-message" hidden></label>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-sm-5 col-sm-offset-1" id="auth-col" hidden>
+        <form class="form-horizontal" role="form" name="auth-form" id="auth-form">
+            <div class="form-group">
+                <div class="row">
+                    <legend>Sign In</legend>
+                </div>
+
+                <div class="row" id="auth-row">
+                    <label class="control-label" for="reg-email">Email:</label><br>
+                    <input type="email" class="form-control" id="reg-email" name="reg-email" value="email@test" placeholder="Enter your email ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-password1">Password:</label><br>
+                    <input type="password" class="form-control" id="reg-password1" name="password" value="pass" placeholder="Enter your password ..." required>
+                    <br>
+
+                    <button type="submit" class="btn btn-success">Sign In</button>
+                </div>
+                <label id="auth-message" hidden></label>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-sm-5 col-sm-offset-1" id="routes-col" hidden>
+        <table class="table">
+            <thead>
+              <tr>
+                <th>Звідки</th>
+                <th>Куди</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="table-route-body">
+
+            </tbody>
+            </table>
+        </div>
+
+    <script>
+    $('form[name="reg-form"]').submit(function (e) {
+            e.preventDefault();
+
+            $.post('submit/', $(this).serialize())
+            .done(function(response) {
+                if(response.status == true) {
+                    $('#reg-row').hide();
+                    userName=response.user;
+                    signedIn = true;
+                    SignIn();
+                }
+                $('#reg-message').show();
+                $('#reg-message').text(response.message);
+
+                console.log("DONE");
+            })
+            .fail(function(jqXHR) {
+                var error = JSON.parse(jqXHR);
+                console.log("FAIL");
+                console.log(error.status + " " + error.message);
+            });
+    });
+
+    $('form[name="auth-form"]').submit(function (e) {
+            e.preventDefault();
+
+            $.post('authorization/', $(this).serialize())
+            .done(function(response) {
+                if(response.status == true) {
+                    $('#auth-row').hide();
+                    userName=response.user;
+                    signedIn = true;
+                    SignIn();
+                }
+                $('#auth-message').show();
+                $('#auth-message').text(response.message);
+
+                console.log("DONE");
+            })
+            .fail(function(jqXHR) {
+                var error = JSON.parse(jqXHR);
+                console.log("FAIL");
+                console.log(error.status + " " + error.message);
+            });
+        });
+
+    $('#btn-calc-route').click(function () {
+        objJSONAddRoutes = calcRoute();
+
+        var address = {};
+        address.addr_start = $('#origin-input').val().split(',')[0];
+        address.addr_end = $('#destination-input').val().split(',')[0];
+        objJSONAddRoutes.address = address;
+
+        if(signedIn){
+            console.log('cyhgvjhbk');
+            $('#btn-add-route').prop('disabled', false);
+        }
+    });
+
+    $('#btn-add-route').click(function () {
+        var objJSON = JSON.stringify(objJSONAddRoutes);
+
+        $.post('add_route/', {ddd: objJSON})
+                .done(function (response) {
+                    console.log("ADD ROUTE: done");
+                    reloadRoutesTable();
+                })
+                .fail(function (jqXHR) {
+                    var error = JSON.parse(jqXHR);
+                    console.log("ADD ROUTE: fail");
+                    console.log(error.status + " " + error.message);
+                });
+    });
+    </script>
+
+{% endblock %}

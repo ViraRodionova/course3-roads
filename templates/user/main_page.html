@@ -1,0 +1,22 @@
+{%  extends 'base.html' %}
+{% block content %}
+
+    <div class="col-sm-6 col-sm-offset-0">
+        <div id="map" style='height:440px;width:600px;'></div>
+
+        <label class="control-label" for="origin-input">Звідки:</label>
+        <input id="origin-input" type="text" class="form-control">
+
+        <label class="control-label" for="destination-input">Куди:</label>
+        <input id="destination-input" type="text" class="form-control">
+        <br>
+
+        <button type="button" class="btn btn-success" onclick="calcRoute()">Розрахувати маршрут</button>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+
+        });
+    </script>
+{% endblock %}

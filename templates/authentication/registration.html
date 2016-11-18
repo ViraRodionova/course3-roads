@@ -1,0 +1,67 @@
+{%  extends 'base.html' %}
+{% block content %}
+<div class="container">
+
+{#    <div class="row">#}
+{#        <div class="col-md-2 col-md-offset-5">#}
+{#            <button type="button" class="btn btn-success">Sign In</button>#}
+{#            <button type="button" class="btn btn-primary">Sign Up</button>#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="row">
+        <form class="form-horizontal" role="form" name="form-registration">
+            <div class="form-group">
+{#                <div class="col-md-3 col-md-offset-4">#}
+                    <legend>Registration</legend>
+{#                </div>#}
+            </div>
+
+            <div class="form-group">
+
+{#                <div class="col-sm-3 col-sm-offset-1">#}
+                <div class="col-md-3 col-md-offset-4">
+
+                    <label class="control-label" for="reg-id">Name:</label><br>
+                    <input type="text" class="form-control" id="reg-id" placeholder="Enter your name ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-email">Email:</label><br>
+                    <input type="email" class="form-control" id="reg-email" placeholder="Enter your email ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-password1">Password:</label><br>
+                    <input type="password" class="form-control" id="reg-password1" placeholder="Enter your password ..." required>
+                    <br>
+{#                    <label class="control-label" for="reg-password2">Password:</label><br>#}
+                    <input type="password" class="form-control" id="reg-password2" placeholder="Reenter your password ..." required>
+                    <br>
+
+                    <label class="control-label" for="reg-city">Main city:</label><br>
+                    <input type="text" class="form-control" id="reg-city" required>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+    <script>
+        $(document).ready(function () {
+            RegAutocomplete();
+
+{#            var input = document.getElementById('reg-city');#}
+{#            var autoField = new google.maps.places.Autocomplete(input);#}
+{##}
+{#            autoField.addListener('place_changed', function () {#}
+{#                var place = autoField.getPlace();#}
+{#                if (!place.geometry) {#}
+{#                    window.alert("Autocomplete's returned place contains no geometry");#}
+{#                    return;#}
+{#                }#}
+{#                console.log(place.geometry.location);#}
+{#            });#}
+        });
+    </script>
+{% endblock %}
