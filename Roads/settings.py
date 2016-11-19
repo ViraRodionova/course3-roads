@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'Roads.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'roads',
-        'USER': 'root',
-        'PASSWORD': '1111',
-        'HOST': 'localhost',
+        'NAME': 'sql7145233',
+        'USER': 'sql7145233',
+        'PASSWORD': 'DtLZZNWVvx',
+        'HOST': 'sql7.freemysqlhosting.net',
         'PORT': '3306'
     }
 }

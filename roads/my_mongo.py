@@ -1,15 +1,16 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import models
+import connections
 
 class DBMongo:
     def __init__(self):
-        self.client = MongoClient()
+        self.client = MongoClient('mongodb://bepa.rdnv:coursework3@ds029565.mlab.com:29565/roads')
         self.db = self.client['roads']
         self.user = self.db['user']
         self.route = self.db['route']
-        self.way = self.db['way']
-        self.conformity = self.db['conformity']
+        # self.way = self.db['way']
+        # self.conformity = self.db['conformity']
 
     def insertUser(self, name, city, attrib):
         return self.user.insert_one(models.UserMongo(name, city, attrib)).inserted_id
