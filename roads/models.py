@@ -30,5 +30,5 @@ def RouteMongo(obj, addr):
         },
         "start": [float(obj['start'][0]), float(obj['start'][1])],
         "end": [float(obj['end'][0]), float(obj['end'][1])],
-        "ways": obj['ways']
+        "polyline": obj['polyline']
     }

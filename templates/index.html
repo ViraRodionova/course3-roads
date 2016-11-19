@@ -159,7 +159,7 @@
     $('#btn-add-route').click(function () {
         var objJSON = JSON.stringify(objJSONAddRoutes);
 
-        $.post('add_route/', {ddd: objJSON})
+        $.post('add_route/', {route: objJSON})
                 .done(function (response) {
                     console.log("ADD ROUTE: done");
                     reloadRoutesTable();

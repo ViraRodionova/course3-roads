@@ -40,7 +40,7 @@ def authorization(request):
 @csrf_exempt
 def add_route(request):
     if request.method == 'POST':
-        name = request.POST.__getitem__('ddd')
+        name = request.POST.__getitem__('route')
         route = json.loads(name)
 
         print route['result']

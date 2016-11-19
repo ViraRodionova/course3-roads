@@ -2,7 +2,7 @@
  * Created by bepa on 24.10.16.
  */
 
-var directionsDisplays = [];
+var directionsDisplay;
 var directionsService;
 var autocompleteOrigin, autocompleteDestination;
 var map;
@@ -26,8 +26,8 @@ function initMap(el_id) {
     trafficLayer.setMap(map);
 
     directionsService = new google.maps.DirectionsService();
-    // directionsDisplay = new google.maps.DirectionsRenderer();
-    // directionsDisplay.setMap(map);
+    directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
 
     latlngbounds = new google.maps.LatLngBounds();
 
@@ -67,28 +67,35 @@ function calcRoute() {
         destination:end,
         // key: 'AIzaSyCaDbK3Euwvlvh39XWABpxHW_sgWsxjjMc',
         travelMode: google.maps.TravelMode.DRIVING,
-        provideRouteAlternatives: true
+        provideRouteAlternatives: false,
+        drivingOptions: {
+            departureTime: new Date(Date.now())
+            // trafficModel: "optimistic"
+        }
     };
     directionsService.route(request, function(result, status) {
         // console.log(result);
         if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplays = [];
+            // directionsDisplays = [];
 
-            var ways = [];
+
             res.start = [result.routes[0].legs[0].start_location.lat(),result.routes[0].legs[0].start_location.lng()];
             res.end = [result.routes[0].legs[0].end_location.lat(),result.routes[0].legs[0].end_location.lng()];
+            res.polyline = result.routes[0].overview_polyline;
+            // var ways = [];
 
-            for(var i = 0, len = result.routes.length; i < len; i++){
-                ways.push(result.routes[i].overview_polyline);
+            // for(var i = 0, len = result.routes.length; i < len; i++){
+            //     ways.push(result.routes[i].overview_polyline);
+            directionsDisplay.setDirections(result);
+                // directionsDisplay.push(new google.maps.DirectionsRenderer({
+                //     map: map,
+                //     directions: result,
+                //     routeIndex: i
+                // }));
+            // }
 
-                directionsDisplays.push(new google.maps.DirectionsRenderer({
-                    map: map,
-                    directions: result,
-                    routeIndex: i
-                }));
-            }
 
-            res.ways = ways;
+
         }
     });
     response.user = userName;
