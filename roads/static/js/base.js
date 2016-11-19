@@ -11,10 +11,12 @@ var tableData;
 function formTableRows(routes) {
     tableData = routes;
 
+    console.log(tableData);
+
     var count = 0;
     var html = "";
 
-    if (tableData.length == 0)
+    if (tableData.length == 0) return html;
 
     tableData.forEach(function (item, i) {
         count = item.ways.length;
@@ -35,6 +37,6 @@ function formTableRows(routes) {
 
         html += "</table></div></td></tr>";
     });
-
+    console.log(html);
     return html;
 }

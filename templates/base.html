@@ -116,7 +116,7 @@
             $.post('get_routes_table/', {user_id: userName})
                 .done(function (response) {
 
-                    console.log(response);
+{#                    console.log(response);#}
 
                     $('#table-route-body').append(formTableRows(response.result));
                 })
