@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from my_mySql import dbMySQL
 from my_mongo import dbMongo
@@ -9,6 +9,10 @@ import json
 def index_page(request):
     # dbMongo.reset()
     return render_to_response("index.html")
+
+def showMySQL(request):
+    dbMySQL.showUsers()
+    return HttpResponse('Users')
 
 @csrf_exempt
 def registration(request):

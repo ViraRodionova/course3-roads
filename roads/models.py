@@ -8,6 +8,9 @@ class User(models.Model):
     password = models.CharField(max_length=50)
     mongo_id = models.CharField(max_length=50)
 
+    def __unicode__(self):
+        return "{0}\t{1}".format(self.id_email, self.mongo_id)
+
 def UserMongo(name, city, attrib):
     return {
         "name": name,

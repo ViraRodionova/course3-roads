@@ -18,11 +18,13 @@ from django.contrib import admin
 from roads import views as roads
 
 urlpatterns = [
+    url(r'^showMySQL', roads.showMySQL),
     url(r'^get_routes_table/$', roads.get_routes_table),
     url(r'^add_route/$', roads.add_route),
     url(r'^submit/$', roads.registration),
     url(r'^authorization/$', roads.authorization),
-    url(r'', roads.index_page),
 
     url(r'^admin/', admin.site.urls),
+
+    url(r'', roads.index_page),
 ]

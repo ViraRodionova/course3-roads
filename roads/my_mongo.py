@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import models
-import connections
 
 class DBMongo:
     def __init__(self):
