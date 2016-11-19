@@ -62,6 +62,9 @@ function calcRoute() {
     var start = autocompleteOrigin.getPlace().geometry.location;
     var end = autocompleteDestination.getPlace().geometry.location;
 
+    console.log(start);
+    console.log(end);
+
     var request = {
         origin:start,
         destination:end,
@@ -76,26 +79,12 @@ function calcRoute() {
     directionsService.route(request, function(result, status) {
         // console.log(result);
         if (status == google.maps.DirectionsStatus.OK) {
-            // directionsDisplays = [];
-
 
             res.start = [result.routes[0].legs[0].start_location.lat(),result.routes[0].legs[0].start_location.lng()];
             res.end = [result.routes[0].legs[0].end_location.lat(),result.routes[0].legs[0].end_location.lng()];
             res.polyline = result.routes[0].overview_polyline;
-            // var ways = [];
 
-            // for(var i = 0, len = result.routes.length; i < len; i++){
-            //     ways.push(result.routes[i].overview_polyline);
             directionsDisplay.setDirections(result);
-                // directionsDisplay.push(new google.maps.DirectionsRenderer({
-                //     map: map,
-                //     directions: result,
-                //     routeIndex: i
-                // }));
-            // }
-
-
-
         }
     });
     response.user = userName;
@@ -172,5 +161,32 @@ function RegAutocomplete() {
         var attrib = document.getElementById('reg-city-attrib');
         // attrib.value = place.vicinity + ";" + place.geometry.location.lat() + ";" + place.geometry.location.lng();
         attrib.value = place.geometry.location.lat() + ";" + place.geometry.location.lng();
+    });
+}
+
+function showRoute(u_start, u_end) {
+    markers.forEach(function (m) {
+        m.setVisible(false);
+    });
+
+    var start = new google.maps.LatLng(u_start[0], u_start[1]);
+    var end = new google.maps.LatLng(u_end[0], u_end[1]);
+
+    var request = {
+        origin:start,
+        destination:end,
+        // key: 'AIzaSyCaDbK3Euwvlvh39XWABpxHW_sgWsxjjMc',
+        travelMode: google.maps.TravelMode.DRIVING,
+        provideRouteAlternatives: false,
+        drivingOptions: {
+            departureTime: new Date(Date.now())
+            // trafficModel: "optimistic"
+        }
+    };
+    directionsService.route(request, function(result, status) {
+        // console.log(result);
+        if (status == google.maps.DirectionsStatus.OK) {
+             directionsDisplay.setDirections(result);
+        }
     });
 }

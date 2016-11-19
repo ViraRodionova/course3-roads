@@ -18,7 +18,17 @@ function formTableRows(routes) {
 
     if (tableData.length == 0) return html;
 
-    tableData.forEach(function (item, i) {
+    tableData.forEach(function (item, indx) {
+
+        // var str = indx.toString();
+
+        html += "<tr onclick='getRoute(this)'>" +
+            "<td hidden>"+ indx +"</td>" +
+            "<td>"+ item.address.start +"</td>" +
+            "<td>"+ item.address.end +"</td>" +
+            "</tr>";
+
+
         // count = item.ways.length;
 
         // html += "<tr data-toggle=\"collapse\" data-target=\"#accordion"+i+"\" class=\"clickable\">" +
@@ -36,11 +46,14 @@ function formTableRows(routes) {
         // });
         // html += "</table></div></td></tr>";
 
-        html += "<tr>" +
-            "<td>"+ item.address.start +"</td>" +
-            "<td>"+ item.address.end +"</td>" +
-            "</tr>";
+
     });
     // console.log(html);
     return html;
+}
+
+function getRoute(row) {
+    var index = Number(row.getElementsByTagName('td')[0].textContent);
+    showRoute(tableData[index].start, tableData[index].end);
+    // console.log(tableData[index]);
 }
