@@ -15,7 +15,10 @@ class DBMongo:
         return self.user.insert_one(models.UserMongo(name, city, attrib)).inserted_id
 
     def insertRoute(self, request):
-        route_id = self.route.insert_one(models.RouteMongo(request['result'], request['address'])).inserted_id
+        route_id = self.route.find_one({"polyline": request['result']['polyline']})['_id']
+
+        if not route_id:
+            route_id = self.route.insert_one(models.RouteMongo(request['result'], request['address'])).inserted_id
 
         self.user.find_one_and_update({"_id": ObjectId(request['user'])}, {"$push": {"routes": route_id}})
         return
@@ -38,5 +41,18 @@ class DBMongo:
         print result
         return result
 
+    def recalculate_routes_duration(self):
+        routes = self.route.find()
+
+    def get_all_routes(self):
+        routes = self.route.find()
+
+        result = []
+
+        for r in routes:
+            result.append({"route_id": str(r["_id"]), "start": r["start"], "end": r["end"]})
+
+        # print result
+        return result
 
 dbMongo = DBMongo()

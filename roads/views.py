@@ -57,3 +57,15 @@ def get_routes_table(request):
         routes = dbMongo.get_routes_by_id(user_id)
 
     return JsonResponse({"result": routes})
+
+@csrf_exempt
+def recalculate_all_roads(request):
+    if request.method == 'GET':
+        return JsonResponse({"result": dbMongo.get_all_routes()})
+    if request.method == 'POST':
+        routes = request.POST.__getitem__('routes')
+        routes = json.loads(routes)
+        print routes
+
+        return HttpResponse('OK')
+    return HttpResponse('No changes')

@@ -16,7 +16,9 @@
     </div>
 
     <div class="col-sm-5 col-sm-offset-1" id="stats-col">
-        <legend>Statistics</legend>
+        <legend>Statistics</legend><br><br>
+
+        <button type="button" class="btn btn-warning" id="recalculate">Recalculate</button>
     </div>
 
     <div class="col-sm-5 col-sm-offset-1" id="reg-col" hidden>
@@ -170,6 +172,32 @@
                     console.log(error.status + " " + error.message);
                 });
     });
+
+    $('#recalculate').click(function () {
+        $.get('recalculate/')
+                .done(function (response) {
+                    getDurations(response.result).then(data => {
+                        var ttt = data;
+                        console.log(ttt);
+                        rec(ttt);
+                    });
+                })
+                .fail(function () {
+                    var error = JSON.parse(jqXHR);
+                    console.log(error.status + " " + error.message);
+                });
+    });
+
+    function rec(data){
+        $.post('recalculate/', {routes: JSON.stringify(data)})
+            .done(function (response) {
+                console.log(response);
+            })
+            .fail(function () {
+                var error = JSON.parse(jqXHR);
+                console.log(error.status + " " + error.message);
+            });
+    }
     </script>
 
 {% endblock %}

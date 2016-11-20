@@ -190,3 +190,38 @@ function showRoute(u_start, u_end) {
         }
     });
 }
+
+function getDurations(routes) {
+    var counter = 0;
+
+    return new Promise(function(resolve, reject) {
+        routes.forEach((item) => {
+            var start = new google.maps.LatLng(item.start[0], item.start[1]);
+            var end = new google.maps.LatLng(item.end[0], item.end[1]);
+            item.date = new Date(Date.now());
+
+            var request = {
+                origin:start,
+                destination:end,
+                // key: 'AIzaSyCaDbK3Euwvlvh39XWABpxHW_sgWsxjjMc',
+                travelMode: google.maps.TravelMode.DRIVING,
+                provideRouteAlternatives: false,
+                drivingOptions: {
+                    departureTime: item.date
+                    // trafficModel: "optimistic"
+                }
+            };
+
+            directionsService.route(request, function(result, status) {
+
+                if (status == google.maps.DirectionsStatus.OK) {
+                    counter++;
+
+                    item.dur = result.routes[0].legs[0].duration_in_traffic.value;
+                    if(counter === routes.length) resolve(routes);
+                }
+            });
+
+        });
+    });
+}
